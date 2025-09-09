@@ -103,6 +103,10 @@ public class WeaponController : MonoBehaviour
                     { HitTarget(hits[i]); }
                 }
                 break;
+                case WeaponType.Explosive:
+                    if(Physics.Raycast(myController.cam.transform.position, myController.cam.transform.forward, out hit, weaponData.weaponRange))
+                    { HitTarget(hit); }
+                break;
         }
     }
 
@@ -119,7 +123,49 @@ public class WeaponController : MonoBehaviour
             { T.TakeDamage(weaponData.attackDamage); }
         }
 
-        GameObject GO = Instantiate(weaponData.hitEffect, hit.point, Quaternion.identity);
-        Destroy(GO, 4);
+        if(weaponData.explosive)
+        {
+            Explode(hit.point);
+        }
+        else
+        {
+            GameObject GO = Instantiate(weaponData.hitEffect, hit.point, Quaternion.identity);
+            Destroy(GO, 4);
+        }
     }
+
+    void Explode(Vector3 point)
+{
+    Collider[] colliders = Physics.OverlapSphere(point, weaponData.explosionRadius);
+    for (int i = 0; i < colliders.Length; i++)
+    {
+        if (colliders[i].transform.parent != null &&
+            colliders[i].transform.parent.TryGetComponent<Actor>(out Actor A))
+        {
+            A.TakeDamage(weaponData.explosionDamage);
+        }
+    }
+
+    if (weaponData.explosionEffect != null)
+    {
+        GameObject explosion = Instantiate(weaponData.explosionEffect, point, Quaternion.identity);
+        Destroy(explosion, 4);
+    }
+
+    // หน่วง 0.5 วินาทีแล้วค่อยเล่นเสียง
+    StartCoroutine(PlayExplosionSoundDelayed(point, 0.02f));
+}
+
+    IEnumerator PlayExplosionSoundDelayed(Vector3 point, float delaySec)
+    {
+        yield return new WaitForSeconds(delaySec);          // ใช้ WaitForSecondsRealtime ถ้าไม่อยากให้โดน Time.timeScale
+        if (weaponData.explosionSound == null) yield break;
+
+        // ถ้าอยากให้เสียงออกที่ตำแหน่งระเบิดจริง ๆ:
+        // AudioSource.PlayClipAtPoint(weaponData.explosionSound, point, 1f);
+
+        // หรือใช้ AudioSource เดิมที่ผูกกับออบเจกต์นี้:
+        audioSource.PlayOneShot(weaponData.explosionSound);
+    }
+ 
 }

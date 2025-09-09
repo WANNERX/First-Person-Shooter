@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   type: 0
+  explosive: 1
   automatic: 1
-  maxAmmo: 4
+  maxAmmo: 13
   fireRate: 0.2
   attackDamage: 2
   reloadTime: 1
@@ -25,5 +26,10 @@ MonoBehaviour:
   fireSound: {fileID: 8300000, guid: ec9432de99f51ff4c9ef5a0eb3937476, type: 3}
   hitEffect: {fileID: 5334228485563152753, guid: aa48f79ae6966f342bfeee96a24533c1,
     type: 3}
+  explosionEffect: {fileID: 1324053976113352751, guid: 12649a99bdcd2584b931194a65be8314,
+    type: 3}
+  explosionRadius: 0.3
+  explosionDamage: 1
+  explosionSound: {fileID: 8300000, guid: 3411b2d9140ffad42bd37ab3b8dffeee, type: 3}
   weaponPrefab: {fileID: 3351318734045613032, guid: a40bd5a106a8aa74fb64ca34ffeb3c87,
     type: 3}
