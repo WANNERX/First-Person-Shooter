@@ -25,19 +25,8 @@ public class WeaponController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         weaponAnimator = GetComponentInChildren<Animator>();
 
-        // ammoCount = weaponData.maxAmmo;
+        ammoCount = weaponData.maxAmmo;
         //UserInterface.Singleton.UpdateBulletCounter(ammoCount, weaponData.maxAmmo);
-        if (PlayerPrefs.HasKey("SavedAmmo"))
-        {
-            ammoCount = PlayerPrefs.GetInt("SavedAmmo");
-            PlayerPrefs.DeleteKey("SavedAmmo");
-            PlayerPrefs.Save();
-        }
-        else
-        {
-            ammoCount = weaponData.maxAmmo;
-        }
-        UserInterface.Singleton.UpdateBulletCounter(ammoCount, weaponData.maxAmmo);
     }
 
     public void Shoot()
