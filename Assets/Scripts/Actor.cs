@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class Actor : MonoBehaviour
 {
     int currentHealth;
     public int maxHealth;
+    public event Action<Actor> OnDeath;
 
     void Awake()
     {
@@ -19,11 +21,12 @@ public class Actor : MonoBehaviour
         if(currentHealth <= 0)
         { Death(); }
     }
-
-    void Death()
+    
+    protected virtual void Death()
     {
         // Death function
         // TEMPORARY: Destroy Object
+        OnDeath?.Invoke(this);
         Destroy(gameObject);
     }
 }

@@ -15,8 +15,8 @@ MonoBehaviour:
   type: 0
   explosive: 1
   automatic: 1
-  maxAmmo: 13
-  fireRate: 0.2
+  maxAmmo: 24
+  fireRate: 0.3
   attackDamage: 2
   reloadTime: 1
   headshotMultiplier: 1.2
