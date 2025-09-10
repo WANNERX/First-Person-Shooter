@@ -25,8 +25,19 @@ public class WeaponController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         weaponAnimator = GetComponentInChildren<Animator>();
 
-        ammoCount = weaponData.maxAmmo;
+        // ammoCount = weaponData.maxAmmo;
         //UserInterface.Singleton.UpdateBulletCounter(ammoCount, weaponData.maxAmmo);
+        if (PlayerPrefs.HasKey("SavedAmmo"))
+        {
+            ammoCount = PlayerPrefs.GetInt("SavedAmmo");
+            PlayerPrefs.DeleteKey("SavedAmmo");
+            PlayerPrefs.Save();
+        }
+        else
+        {
+            ammoCount = weaponData.maxAmmo;
+        }
+        UserInterface.Singleton.UpdateBulletCounter(ammoCount, weaponData.maxAmmo);
     }
 
     public void Shoot()
@@ -112,18 +123,21 @@ public class WeaponController : MonoBehaviour
 
     void HitTarget(RaycastHit hit)
     {
-        if(hit.transform.parent.TryGetComponent<Actor>(out Actor T))
+        Actor target = hit.transform.GetComponent<Actor>();
+        if (target == null && hit.transform.parent != null)
+            hit.transform.parent.TryGetComponent(out target);
+
+        if (target != null)
         {
-            if(hit.transform.tag == "Head")
-            {
-                int dmg = Mathf.RoundToInt(weaponData.attackDamage * weaponData.headshotMultiplier);
-                T.TakeDamage(dmg);
-            }
+            if (hit.transform.CompareTag("Head"))
+                target.TakeDamage(Mathf.RoundToInt(weaponData.attackDamage * weaponData.headshotMultiplier));
             else
-            { T.TakeDamage(weaponData.attackDamage); }
+            { 
+                target.TakeDamage(weaponData.attackDamage);
+            }
         }
 
-        if(weaponData.explosive)
+        if (weaponData.explosive)
         {
             Explode(hit.point);
         }
